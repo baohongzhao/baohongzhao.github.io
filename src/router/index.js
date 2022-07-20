@@ -57,7 +57,7 @@ const routes = [
 
 const router = new Router({
   routes,
-  // mode : 'history',
+  mode : 'history',
   // linkActiveClass : 'active',
   /*scrollBehavior (to,from,savePosition) {
     return {x: 0, y: 0};
