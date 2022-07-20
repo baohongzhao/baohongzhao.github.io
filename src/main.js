@@ -12,7 +12,7 @@ Vue.prototype.$bus = new Vue();//配置事件总线
 
 Vue.use(toast);
 
-fastclick.attach(document.body);//fastclick配置
+// fastclick.attach(document.body);//fastclick配置
 
 Vue.use(lazyLoad, {
   loading: require('./assets/img/common/loading.jpg')
