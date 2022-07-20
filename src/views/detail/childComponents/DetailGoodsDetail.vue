@@ -1,14 +1,14 @@
 <template>
   <div class="info">
-    <img :src="v" alt="" v-for="v in goodsInfo">
+    <img :src="v" alt="" v-for="v in goodsDetail">
   </div>
 </template>
 
 <script>
 export default {
-  name: "DetailGoodsInfo",
+  name: "DetailGoodsDetail",
   props: {
-    goodsInfo: {
+    goodsDetail: {
       type: Array,
       default () {
         return [];
@@ -29,7 +29,7 @@ export default {
     }*/
   },
   watch: {
-    goodsInfo (info) {
+    goodsDetail (info) {
       this.imgLength = info.length;
     }
   }

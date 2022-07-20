@@ -1,0 +1,76 @@
+1.初始化项目目录结构,src下需要创建的目录结构
+assets : 资源目录,放css和images等资源文件
+  css : 样式文件夹
+  img : 图片文件夹
+common : 公共文件夹,放一些公共js
+components : 组件文件夹
+  common : 公共组件文件夹,放一些其他项目也能共用的组件
+  content : 内容文件夹,放项目相关的组件
+network : 网络文件夹,放axios相关配置
+router : 路由文件夹,放vue-router相关配置
+store : 库文件夹,放vuex相关配置
+views : 视图文件夹,放大块视图组件
+
+2.引用基本的样式文件,normalize.css用于统一各个浏览器下html标签的不同样式,base.css项目的基本样式,下面有两个知识点
+  (1).es6在文件中引入css的写法,@import '路径';
+  (2).css创建变量的方法 --变量名:值 详见base.css文件
+
+3.配置目录别名,cli3和cli4的写法不一样,在根目录的vue.config.js中配置
+  configureWebpack: {//cli3版本设置目录别名的方法
+    devtool: 'source-map',
+      resolve: {
+        alias: {
+          '@': resolve('src'),
+          '@com': '@/components',
+          '@utils': '@/utils',
+          '@views': '@/views',
+          '@assets': '@/assets'
+        }
+      }
+  },
+
+  chainWebpack: config => {//cli4版本设置目录别名的方法
+      config.resolve.alias
+        .set('assets', resolve('src/assets'))
+        .set('common', resolve('src/common'))
+        .set('components', resolve('src/components'))
+        .set('network', resolve('src/network'))
+        .set('views', resolve('src/views'))
+    },
+
+
+知识点 :
+1.组件上的style的scoped属性是作用域的意思,这样保证组件之前的样式不发生冲突
+
+2.在组件内的标签使用ref,这样可以获得这个标签的dom,确保唯一性
+
+3.css中的vh单位,视窗宽度的百分比（1vw 代表视窗的宽度为 1%）
+
+4.css中的calc,calc() 函数用于动态计算长度值。
+  需要注意的是，运算符前后都需要保留一个空格，例如：width: calc(100% - 10px)；
+  任何长度值都可以使用calc()函数进行计算；
+  calc()函数支持 "+", "-", "*", "/" 运算；
+  calc()函数使用标准的数学运算优先级规则；
+
+5.$bus总线机制,用于兄弟组件或两个不相关组件之间传值使用,应用于小型项目
+  在main.js中配置
+  Vue.prototype.$bus = new Vue();
+  a组件向b组件传值的话
+  a组件 : this.$bus.$emit('name',data)
+  b组件 : this.$bus.$on('name',(data) => {console.log(data)})
+  用完之后销毁 : this.$bus.$off('name');
+
+6.防抖函数
+  debounce (func, delay) {
+    let timer = null;
+    return function () {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this)
+      },delay)
+    }
+  },
+
+7.解决移动端点击事件300ms延时问题,安装fastclick插件,命令:npm install fastclick --save,配置见main.js
+
+8.图片懒加载的使用,安装命令:npm install vue-lazyload --save,配置详见main.js

@@ -12,6 +12,9 @@ export default {
   props: {
     goods: {
       type: Array,
+      default () {
+        return [];
+      }
     }
   },
   components: {

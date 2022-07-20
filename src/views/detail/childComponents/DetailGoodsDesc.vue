@@ -1,16 +1,16 @@
 <template>
   <div class="goods_info">
-    <div class="title">{{goodsInfo.title}}</div>
+    <div class="title">{{goodsDesc.title}}</div>
     <div class="price">
-      <span class="new_price">{{goodsInfo.price}}</span>
-      <del class="old_price">{{goodsInfo.oldPrice}}</del>
-      <span class="desc">{{goodsInfo.discountDesc}}</span>
+      <span class="new_price">{{goodsDesc.price}}</span>
+      <del class="old_price">{{goodsDesc.oldPrice}}</del>
+      <span class="desc">{{goodsDesc.discountDesc}}</span>
     </div>
     <div class="columns">
-      <p v-for="v in goodsInfo.columns">{{v}}</p>
+      <p v-for="v in goodsDesc.columns">{{v}}</p>
     </div>
     <div class="services">
-      <p v-for="v in goodsInfo.services">
+      <p v-for="v in goodsDesc.services">
         <img :src="v.icon" alt="" v-if="v.icon">
         <span>{{ v.name }}</span>
       </p>
@@ -22,7 +22,7 @@
 export default {
   name: "DetailGoodsInfo",
   props: {
-    goodsInfo: {
+    goodsDesc: {
       type: Object,
       default () {
         return {};
@@ -38,7 +38,11 @@ export default {
   padding: 0 10px;
   border-bottom: 4px solid #f6f6f6;
 }
-.title{padding-top: 10px;color: #333;font-size: 16px;}
+.title{
+  padding-top: 10px;
+  color: #333;
+  font-size: 16px;
+}
 .price{
   margin-top: 10px;
   line-height: 24px;

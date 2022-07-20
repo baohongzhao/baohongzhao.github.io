@@ -1,7 +1,6 @@
 <template>
   <div class="goods_list_item" @click="itemClick">
-<!--    <img :src="this.goodsInfo.show ? this.goodsInfo.show.img : this.goodsInfo.image" alt="" @load="imgLoad">-->
-    <img alt="" @load="imgLoad" :src="this.goodsInfo.show.img">
+    <img v-lazy="showImage" alt="" @load="imgLoad">
     <div class="goods_title">
       <p>{{goodsInfo.title}}</p>
       <p><span class="price">{{goodsInfo.price}}</span><i class="save"></i>{{goodsInfo.cfav}}</p>
@@ -17,10 +16,6 @@ export default {
       type: Object
     }
   },
-  created() {
-    // console.log(this.showImage);
-
-  },
   methods: {
     imgLoad () {
       this.$bus.$emit('imgLoad');//事件总线,发射事件,接收事件在Home.vue文件,配置在main.js文件
@@ -34,12 +29,12 @@ export default {
       })
     }
   },
-  /*computed: {
+  computed: {
     showImage() {
       this.imgUrl = 1;
       return this.goodsInfo.img || this.goodsInfo.image || this.goodsInfo.show.img
     }
-  },*/
+  },
 }
 </script>
 

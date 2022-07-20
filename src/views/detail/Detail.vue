@@ -3,14 +3,15 @@
     <detail-nav-bar :index="currentIndex" @scrollTo="scrollTo"></detail-nav-bar>
     <b-scroll ref="scroll" :observe-d-o-m="true" :observe-image="true" :probe-type="3" @scrollPosition="scroll">
       <detail-swiper :top-images="topImages"></detail-swiper>
-      <detail-goods-desc :goods-desc="goodsDesc" :key="componentKey"></detail-goods-desc>
+      <detail-goods-desc :goods-desc="goodsDesc"></detail-goods-desc>
       <detail-shop-info :shopInfo="shopInfo"></detail-shop-info>
       <detail-goods-detail :goodsDetail="goodsDetail"></detail-goods-detail>
       <detail-params :params="params" ref="detail_params"></detail-params>
       <detail-comment :comment="comment" ref="detail_comment"></detail-comment>
-      <goods-list :goods="recommendList" ref="detail_recommend" :key="recommendKey"></goods-list>
+      <goods-list :goods="recommendList" ref="detail_recommend"></goods-list>
     </b-scroll>
-    <detail-button-bar></detail-button-bar>
+    <back-top v-show="backTopIsShow" @click.native="scrollToTop"></back-top>
+    <detail-button-bar @addToCart="addToCart"></detail-button-bar>
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import goodsList from "@/components/content/goodsList/GoodsList";
 import detailButtonBar from "@/views/detail/childComponents/DetailButtonBar";
 
 import {getGoodsInfo, getRecommend, goods, shop, params} from "@/network/detail";
+import {backTopMixin} from "@/common/mixin";
 
 export default {
   name: "Detail",
@@ -41,12 +43,10 @@ export default {
       params: {},
       comment: [],
       recommendList: [],
-      paramsPosition: 0,
+      navBarPosition: 0,
       commentPosition: 0,
       recommendPosition: 0,
       currentIndex: 0,
-      componentKey: 'componentFalse',
-      recommendKey: 'recommendFalse',
     }
   },
   created() {
@@ -81,8 +81,6 @@ export default {
         this.params = new params(info.itemParams);
         //评论
         this.comment = info.rate.list;
-
-        this.componentKey = 'componentTrue';
       })
     },
     /**
@@ -91,16 +89,8 @@ export default {
     getGoodsList () {
       getRecommend().then(res => {
         this.recommendList = res.data.list;
-        this.recommendKey = 'recommendTrue';
       })
-      //this.goodsList = getRecommend();
     },
-    /**
-     * 图片加载完刷新BScroll
-     * */
-    /*imgLoad() {
-      this.$refs.scroll.refresh();
-    }*/
     /**
      * 滑动切换导航栏
      * */
@@ -120,6 +110,9 @@ export default {
           this.currentIndex = 3
           break
       }
+      //回到顶部显示判断
+      console.log(document.body.clientHeight);
+      this.backTopIsShow = document.body.clientHeight + position.y <= 0;
     },
     /**
      * 点击导航栏滚到相应位置
@@ -140,8 +133,26 @@ export default {
           position = this.recommendPosition
       }
       this.$refs.scroll.scrollTo(0, -position);
+    },
+    /**
+     * 加入购物车
+     * */
+    addToCart() {
+      let goods = {};
+      goods.img = this.topImages[0];
+      goods.title = this.goodsDesc.title;
+      goods.desc = this.goodsDesc.desc;
+      goods.price = this.goodsDesc.nowPrice;
+      goods.num = 1;
+      goods.iid = this.iid;
+      goods.checked = true;
+      this.$store.dispatch('addToCart', goods).then(res => {
+        // this.$toast.show(res);
+        this.$toast({message: res});
+      })
     }
   },
+  mixins: [backTopMixin],
   components: {
     detailNavBar,
     BScroll,
@@ -158,6 +169,9 @@ export default {
 </script>
 
 <style scoped>
+#detail{
+  height: 100vh;
+}
 .wrapper{
   position: absolute;
   top: 44px;

@@ -1,10 +1,9 @@
 <template>
-    <div id="hy-swiper">
+    <div class="b_swiper" ref="swiper">
       <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
         <slot></slot>
       </div>
-      <slot name="indicator">
-      </slot>
+<!--      <slot name="indicator"></slot>-->
       <div class="indicator">
         <slot name="indicator" v-if="showIndicator && slideCount>1">
           <div v-for="(item, index) in slideCount" class="indi-item" :class="{active: index === currentIndex-1}" :key="index"></div>
@@ -17,19 +16,19 @@
 	export default {
 		name: "Swiper",
     props: {
-      interval: {
+      interval: {//滚动间隔时间
 		    type: Number,
         default: 3000
       },
-      animDuration: {
+      animDuration: {//滚动动画时间
 		    type: Number,
         default: 300
       },
-      moveRatio: {
+      moveRatio: {//拖动百分百
         type: Number,
         default: 0.25
       },
-      showIndicator: {
+      showIndicator: {//显示轮播指示
         type: Boolean,
         default: true
       }
@@ -44,20 +43,31 @@
       }
     },
     mounted: function () {
-      // 1.操作DOM, 在前后添加Slide
-      setTimeout(() => {
-        this.handleDom();
 
-        // 2.开启定时器
-        this.startTimer();
-      }, 100)
+      let timer = setInterval(() => {
+        // 1.获取要操作的元素
+        let swiperEl = this.$refs.swiper.querySelector('.swiper');
+        let slidesEls = swiperEl.getElementsByClassName('slide');
+
+        // 2.保存个数
+        this.slideCount = slidesEls.length;//获取轮播子元素个数
+
+        if (this.slideCount > 0) {
+          clearInterval(timer);
+          // 1.操作DOM, 在前后添加Slide
+          this.handleDom();
+
+          // 2.开启定时器
+          this.startTimer();
+        }
+      },100)
     },
     methods: {
 		  /**
        * 定时器操作
        */
       startTimer: function () {
-		    this.playTimer = window.setInterval(() => {
+        this.playTimer = window.setInterval(() => {
 		      this.currentIndex++;
 		      this.scrollContent(-this.currentIndex * this.totalWidth);
         }, this.interval)
@@ -100,7 +110,7 @@
           }
 
           // 2.结束移动后的回调
-          this.$emit('transitionEnd', this.currentIndex-1);
+          // this.$emit('transitionEnd', this.currentIndex-1);
         }, this.animDuration)
       },
 
@@ -118,20 +128,20 @@
        */
 		  handleDom: function () {
         // 1.获取要操作的元素
-        let swiperEl = document.querySelector('.swiper');
+        let swiperEl = this.$refs.swiper.querySelector('.swiper');
         let slidesEls = swiperEl.getElementsByClassName('slide');
 
         // 2.保存个数
-        this.slideCount = slidesEls.length;
+        this.slideCount = slidesEls.length;//获取轮播子元素个数
 
         // 3.如果大于1个, 那么在前后分别添加一个slide
         if (this.slideCount > 1) {
-          let cloneFirst = slidesEls[0].cloneNode(true);
-          let cloneLast = slidesEls[this.slideCount - 1].cloneNode(true);
-          swiperEl.insertBefore(cloneLast, slidesEls[0]);
-          swiperEl.appendChild(cloneFirst);
-          this.totalWidth = swiperEl.offsetWidth;
-          this.swiperStyle = swiperEl.style;
+          let cloneFirst = slidesEls[0].cloneNode(true);//克隆第一个子元素
+          let cloneLast = slidesEls[this.slideCount - 1].cloneNode(true);//克隆最后一个子元素
+          swiperEl.insertBefore(cloneLast, slidesEls[0]);//把最后一个插到头部
+          swiperEl.appendChild(cloneFirst);//把第一个插到尾部
+          this.totalWidth = swiperEl.offsetWidth;//获取轮播的宽度
+          this.swiperStyle = swiperEl.style;//获取轮播css样式
         }
 
         // 4.让swiper元素, 显示第一个(目前是显示前面添加的最后一个元素)
@@ -210,7 +220,7 @@
 </script>
 
 <style scoped>
-  #hy-swiper {
+  .b_swiper {
     overflow: hidden;
     position: relative;
   }
