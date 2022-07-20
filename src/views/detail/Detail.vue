@@ -111,7 +111,6 @@ export default {
           break
       }
       //回到顶部显示判断
-      console.log(document.body.clientHeight);
       this.backTopIsShow = document.body.clientHeight + position.y <= 0;
     },
     /**
