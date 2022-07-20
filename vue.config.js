@@ -25,4 +25,5 @@ module.exports = defineConfig({
       .set('network', resolve('src/network'))
       .set('views', resolve('src/views'))
   },
+  outputDir: 'dist',
 })
