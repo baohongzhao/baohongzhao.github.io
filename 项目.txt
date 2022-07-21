@@ -74,3 +74,6 @@ views : 视图文件夹,放大块视图组件
 7.解决移动端点击事件300ms延时问题,安装fastclick插件,命令:npm install fastclick --save,配置见main.js
 
 8.图片懒加载的使用,安装命令:npm install vue-lazyload --save,配置详见main.js
+
+9.px转换vw(也有转换成rem的插件,看需求),安装命令 : npm install postcss-px-to-viewport --save-dev,插件只是打包时依赖
+配置需在postcss.config.js中写,不能再vue.config.js中

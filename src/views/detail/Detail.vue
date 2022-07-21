@@ -1,14 +1,20 @@
 <template>
   <div id="detail">
     <detail-nav-bar :index="currentIndex" @scrollTo="scrollTo"></detail-nav-bar>
-    <b-scroll ref="scroll" :observe-d-o-m="true" :observe-image="true" :probe-type="3" @scrollPosition="scroll">
+    <b-scroll ref="scroll"
+              :observe-d-o-m="true"
+              :observe-image="true"
+              :probe-type="3"
+              :refresh-back="true"
+              @scrollPosition="scroll"
+              @refreshBack="refreshBack">
       <detail-swiper :top-images="topImages"></detail-swiper>
       <detail-goods-desc :goods-desc="goodsDesc"></detail-goods-desc>
       <detail-shop-info :shopInfo="shopInfo"></detail-shop-info>
       <detail-goods-detail :goodsDetail="goodsDetail"></detail-goods-detail>
       <detail-params :params="params" ref="detail_params"></detail-params>
       <detail-comment :comment="comment" ref="detail_comment"></detail-comment>
-      <goods-list :goods="recommendList" ref="detail_recommend"></goods-list>
+      <goods-list class="recommend" :goods="recommendList" ref="detail_recommend"></goods-list>
     </b-scroll>
     <back-top v-show="backTopIsShow" @click.native="scrollToTop"></back-top>
     <detail-button-bar @addToCart="addToCart"></detail-button-bar>
@@ -57,9 +63,12 @@ export default {
     this.getGoodsList();//获取推荐商品列表
   },
   updated() {
-    this.paramsPosition = this.$refs.detail_params.$el.offsetTop;
-    this.commentPosition = this.$refs.detail_comment.$el.offsetTop;
-    this.recommendPosition = this.$refs.detail_recommend.$el.offsetTop;
+    // this.paramsPosition = this.$refs.detail_params.$el.offsetTop;
+    // this.commentPosition = this.$refs.detail_comment.$el.offsetTop;
+    // this.recommendPosition = this.$refs.detail_recommend.$el.offsetTop;
+    // console.log(this.paramsPosition);
+    // console.log(this.commentPosition);
+    // console.log(this.recommendPosition);
   },
   methods: {
     /**
@@ -149,6 +158,11 @@ export default {
         // this.$toast.show(res);
         this.$toast({message: res});
       })
+    },
+    refreshBack () {
+      this.paramsPosition = this.$refs.detail_params.$el.offsetTop;
+      this.commentPosition = this.$refs.detail_comment.$el.offsetTop;
+      this.recommendPosition = this.$refs.detail_recommend.$el.offsetTop;
     }
   },
   mixins: [backTopMixin],
@@ -179,4 +193,5 @@ export default {
   right: 0;
   overflow: hidden;
 }
+.recommend{padding-top: 20px;}
 </style>

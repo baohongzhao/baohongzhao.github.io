@@ -33,6 +33,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    refreshBack: {
+      type: Boolean,
+      default: false,
+    },
   },
   mounted() {
     this.scroll = new bscroll(this.$refs.wrapper, {
@@ -56,6 +60,12 @@ export default {
     if (this.pullUpLoad) {
       this.scroll.on('pullingUp', () => {
         this.$emit('scrollPullingUp');
+      })
+    }
+
+    if (this.refreshBack) {
+      this.scroll.on('refresh', () => {
+        this.$emit('refreshBack')
       })
     }
   },
